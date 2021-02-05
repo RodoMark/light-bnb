@@ -20,14 +20,14 @@ const users = require('./json/users.json');
 const getUserWithEmail = function(email) {
   return pool.query(
     `
-    SELECT id
+    SELECT *
     FROM users
     WHERE email = $1
     ` ,
     [email]).then(output => {
-      if(email) {
-       return output.rows;
-      }
+      const user = output.rows[0]
+      console.log("==============", user)
+       return user;
     })
 }
 
@@ -66,12 +66,7 @@ const addUser =  function(user) {
     VALUES($1, $2, $3)
     RETURNING *
     `, [user.name, user.email, user.password]).then(output => {
-      return {
-        name: output.rows.name,
-        email: output.rows.email,
-        password: output.rows.password,
-        id: output.rows.id,
-      }
+      return output.rows[0]
     })
 }
 exports.addUser = addUser;
