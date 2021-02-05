@@ -1,4 +1,4 @@
-const { Pool } = require('pg');
+const { Pool, Client } = require('pg')
 
 const pool = new Pool({
   user: 'vagrant',
@@ -76,12 +76,14 @@ exports.getAllReservations = getAllReservations;
  * @return {Promise<[{}]>}  A promise to the properties.
  */
 const getAllProperties = function(options, limit = 10) {
-  return pool.query(`
-  SELECT * FROM properties
-  LIMIT $1
-  `, [limit])
-  .then(res => res.rows);
+  pool.query(`
+  SELECT * 
+  FROM properties
+  LIMIT by $1`, [limit])
+  .then(output => output.rows)
 }
+
+
 exports.getAllProperties = getAllProperties;
 
 
